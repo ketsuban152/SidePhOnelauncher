@@ -301,6 +301,12 @@ class AppDrawerAdapter(
             }
             updateFocusAppearance(root.context, appTitle, otherProfileIndicator, appRow.isFocused, focusIndicatorStyle)
 
+            val isPickerFlag = flag != Constants.FLAG_LAUNCH_APP && flag != Constants.FLAG_HIDDEN_APPS
+            var dpadFreshPress = false
+            var dpadLongPressTriggered = false
+
+            
+            
             appRow.setOnClickListener { clickListener(appModel) }
             appRow.setOnLongClickListener {
                 if (isSpecialActionItem) return@setOnLongClickListener true
@@ -335,14 +341,18 @@ class AppDrawerAdapter(
                     KeyEvent.KEYCODE_NUMPAD_ENTER -> {
                         when (event.action) {
                             KeyEvent.ACTION_DOWN -> {
-                                if (event.repeatCount > 0) {
+                                if (event.repeatCount == 0) {
+                                    dpadFreshPress = true
+                                    dpadLongPressTriggered = false
+                                } else if (dpadFreshPress && !dpadLongPressTriggered) {
+                                    dpadLongPressTriggered = true
                                     appRow.performLongClick()
                                 }
                                 true
-                            }
-
                             KeyEvent.ACTION_UP -> {
-                                if (event.repeatCount == 0) appRow.performClick()
+                                if (dpadFreshPress && !dpadLongPressTriggered) { appRow.performClick() }
+                                dpadFreshPress = false
+                                dpadLongPressTriggered = false
                                 true
                             }
 
