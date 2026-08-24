@@ -504,6 +504,8 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
         binding.tvScreenTime.setOnLongClickListener(this)
 
         listOf(binding.clock, binding.date).forEach { headerView ->
+            var dpadFreshPress = false
+            var dpadLongPressTriggered = false
             headerView.setOnKeyListener { view, keyCode, event ->
                 when (keyCode) {
                     KeyEvent.KEYCODE_DPAD_UP -> {
@@ -512,7 +514,7 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                         val currentIndex = headerTargets.indexOf(view)
                         if (currentIndex > 0) {
                             headerTargets[currentIndex - 1].requestFocus()
-                        }
+                        }else { swipeDownAction() }
                         true
                     }
 
@@ -551,14 +553,20 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                     KeyEvent.KEYCODE_NUMPAD_ENTER -> {
                         when (event.action) {
                             KeyEvent.ACTION_DOWN -> {
-                                if (event.repeatCount > 0) {
+                                if (event.repeatCount == 0) {
+                                    dpadFreshPress = true
+                                    dpadLongPressTriggered = false
+                                } else if (dpadFreshPress && !dpadLongPressTriggered) {
+                                    dpadLongPressTriggered = true
                                     view.performLongClick()
                                 }
                                 true
                             }
 
                             KeyEvent.ACTION_UP -> {
-                                if (event.repeatCount == 0) view.performClick()
+                                if (dpadFreshPress && !dpadLongPressTriggered) view.performClick()
+                                dpadFreshPress = false
+                                dpadLongPressTriggered = false
                                 true
                             }
 
@@ -586,6 +594,8 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             homeApp.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
                 rememberHomeFocus(view, hasFocus)
             }
+            var dpadFreshPress = false
+            var dpadLongPressTriggered = false
             homeApp.setOnKeyListener { view, keyCode, event ->
                 when (keyCode) {
                     KeyEvent.KEYCODE_DPAD_DOWN -> {
@@ -619,14 +629,20 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
                     KeyEvent.KEYCODE_NUMPAD_ENTER -> {
                         when (event.action) {
                             KeyEvent.ACTION_DOWN -> {
-                                if (event.repeatCount > 0) {
+                                if (event.repeatCount == 0) {
+                                    dpadFreshPress = true
+                                    dpadLongPressTriggered = false
+                                } else if (dpadFreshPress && !dpadLongPressTriggered) {
+                                    dpadLongPressTriggered = true
                                     view.performLongClick()
                                 }
                                 true
                             }
 
                             KeyEvent.ACTION_UP -> {
-                                if (event.repeatCount == 0) view.performClick()
+                                if (dpadFreshPress && !dpadLongPressTriggered) view.performClick()
+                                dpadFreshPress = false
+                                dpadLongPressTriggered = false
                                 true
                             }
 
