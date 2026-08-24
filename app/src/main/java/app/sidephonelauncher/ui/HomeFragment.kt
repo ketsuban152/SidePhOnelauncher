@@ -598,6 +598,20 @@ class HomeFragment : Fragment(), View.OnClickListener, View.OnLongClickListener 
             var dpadLongPressTriggered = false
             homeApp.setOnKeyListener { view, keyCode, event ->
                 when (keyCode) {
+                    KeyEvent.KEYCODE_F1, KeyEvent.KEYCODE_F2, KeyEvent.KEYCODE_F3, KeyEvent.KEYCODE_F4 -> {
+	                    val appIndex = when (keyCode) {
+	                        KeyEvent.KEYCODE_F1 -> 1
+	                        KeyEvent.KEYCODE_F2 -> 2
+	                        KeyEvent.KEYCODE_F3 -> 3
+	                        KeyEvent.KEYCODE_F4 -> 4
+	                        else -> 0
+    	            	}
+	                    if (appIndex != 0) {
+	                	    homeAppClicked(appIndex)
+	                        true
+	            	    }else { false }
+                    }
+                    
                     KeyEvent.KEYCODE_DPAD_DOWN -> {
                         if (event.action != KeyEvent.ACTION_DOWN) return@setOnKeyListener true
                         if (event.repeatCount > 0) return@setOnKeyListener true
