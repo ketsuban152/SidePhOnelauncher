@@ -305,8 +305,6 @@ class AppDrawerAdapter(
             var dpadFreshPress = false
             var dpadLongPressTriggered = false
 
-            
-            
             appRow.setOnClickListener { clickListener(appModel) }
             appRow.setOnLongClickListener {
                 if (isSpecialActionItem) return@setOnLongClickListener true
@@ -349,6 +347,8 @@ class AppDrawerAdapter(
                                     appRow.performLongClick()
                                 }
                                 true
+                            }
+
                             KeyEvent.ACTION_UP -> {
                                 if (dpadFreshPress && !dpadLongPressTriggered) { appRow.performClick() }
                                 dpadFreshPress = false
